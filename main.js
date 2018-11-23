@@ -66,7 +66,7 @@ $(document).ready(function() {
                 d.color = 'hsl(' + hue + ', 100%, 50%)';
                 //d.color = BLACK;
             });
-            **/
+             **/
 
             // Classic D3... Select non-existent elements, bind the data, append the elements, and apply attributes
             g.selectAll('circle')
@@ -88,10 +88,10 @@ $(document).ready(function() {
                 .style("fill", "black")
 
             //Next, we need to write two pieces of code, one that listens for when the value of the tooltip changes, and one that updates the SVG elements.
-                //We are going to use some D3 code to listen for an input change on the tooltip elements
-/**
-                //Add Event Listeners | mouseover
-                .on('mouseover', function(d) {
+            //We are going to use some D3 code to listen for an input change on the tooltip elements
+            /**
+             //Add Event Listeners | mouseover
+             .on('mouseover', function(d) {
                     d3.select(this).style('fill', 'black');
                     d3.select('#number').text(d.Accident_Number);
                     d3.select('#date').text(d.Event_Date);
@@ -101,13 +101,13 @@ $(document).ready(function() {
                         .style('display', 'block')
                         .style('opacity', 0.8)
                 })
-                //Add Event Listeners | mouseout
-                .on('mouseout', function(d) {
+             //Add Event Listeners | mouseout
+             .on('mouseout', function(d) {
                     d3.select(this).style('fill', d.color);
                     d3.select('#tip')
                         .style('display', 'none');
                 });
- **/
+             **/
         });
     });
 });
