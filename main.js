@@ -105,7 +105,7 @@ $(document).ready(function() {
 
             //Next, we need to write two pieces of code, one that listens for when the value of the tooltip changes, and one that updates the SVG elements.
             //We are going to use some D3 code to listen for an input change on the tooltip elements
-            /**
+
              //Add Event Listeners | mouseover
              .on('mouseover', function(d) {
                     d3.select(this).style('fill', 'black');
@@ -123,7 +123,7 @@ $(document).ready(function() {
                     d3.select('#tip')
                         .style('display', 'none');
                 });
-             **/
+
         });
     });
 });

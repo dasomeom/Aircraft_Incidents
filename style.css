@@ -30,11 +30,4 @@ path {
  */
 a:link    {color:orangered;  text-decoration:none}
 a:visited {color:orangered; text-decoration:none}
-a:hover   {color:red; text-decoration:underline}
-
-.tableFooter{
-  margin-top: 15px;
-}
-.footerSvg{
-  width: 32px;
-}
+a:hover   {color:antiquewhite; text-decoration:underline}
