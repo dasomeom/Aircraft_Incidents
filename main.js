@@ -53,10 +53,36 @@ $(document).ready(function() {
 
         // Load the data from the json file
         d3.csv('aircraft_incidents.csv', function(error, data) {
-            if (error) console.error(error);
-
-            console.log(data.latitude);
-            var locations = [data.latitude, data.longitude];
+            if (error) throw error;
+            dataset=data.map(function(d) { return [+d.Longitude,+d.Latitude];});
+            //console.log(dataset[][0]);
+            /**
+            var location =
+                data.Accident_Number = d.Accident_Number;
+                data.Event_Date = d.parseDate(d.Event_Date);
+                data.Location = d.Location;
+                data.Country = d.Country;
+                data.Latitude = +d.Latitude;
+                data.Longitude = +d.Longitude;
+                data.Airport_Code = d.Airport_Code;
+                data.Airport_Name = d.Airport_Name;
+                data.Injury_Severity = d.Injury_Severity;
+                data.Aircraft_Damage = d.Aircraft_Damage;
+                data.Registration_Number = d.Registration_Number;
+                data.Make = d.Make;
+                data.Model = d.Model;
+                data.Schedule = d.Schedule;
+                data.Air_Carrier = d.Air_Carrier;
+                data.Total_Fatal_Injuries = d.Total_Fatal_Injuries;
+                data.Total_Serious_Injuries = d.Total_Serious_Injuries;
+                data.Total_Uninjured = d.Total_Uninjured;
+                data.Weather_Condition = d.Weather_Condition;
+                data.Broad_Phase_of_Flight = d.Broad_Phase_of_Flight;
+                return data;
+            }
+**/
+        //console.log(Number(data[0].Latitude));
+            //var locations = [data.Latitude, data.Longitude];
             //var hue = 0; //create the circles
             // we will pass our data (the TopoJSON) as an argument, then create SVG elements using a classic D3 append. Selecting all paths, the TopoJSON is bound in the data method. From here, we can perform work on each element.
 
@@ -67,25 +93,15 @@ $(document).ready(function() {
                 //d.color = BLACK;
             });
              **/
-
             // Classic D3... Select non-existent elements, bind the data, append the elements, and apply attributes
             g.selectAll('circle')
-                .data(locations)
+                .data(data)
                 .enter()
                 .append('circle') //show the circles
-                .attr("cx", function(d) {
-                    var c = [d.latitude, d.longitude];
-                    p = projection(c);
-                    console.log(p);
-                    return p[0]
-                })
-                .attr("r", 2.5)
-                .attr("cy", function(d){
-                    var c = [d.latitude, d.longitude];
-                    p = projection(c);
-                    return p[1]
-                })
-                .style("fill", "black")
+                .attr('cx', function(d) {return projection([d["Longitude"],d["Latitude"]])[0];})
+                .attr('cy', function(d){return projection([d["Longitude"],d["Latitude"]])[1];})
+                .attr("r", 2)
+                .style('fill', "black")
 
             //Next, we need to write two pieces of code, one that listens for when the value of the tooltip changes, and one that updates the SVG elements.
             //We are going to use some D3 code to listen for an input change on the tooltip elements
