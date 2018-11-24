@@ -28,6 +28,28 @@ $(document).ready(function() {
 
 
 
+    var diameter = 500, //max size of the bubbles
+        color    = d3.scale.category10(); //color category
+
+    var bubble = d3.layout.pack()
+        .sort(null)
+        .size([diameter, diameter])
+        .padding(1.5);
+
+    var svg3 = d3.select("#Maker")
+        .append("svg")
+        .attr("width", diameter)
+        .attr("height", diameter)
+        .attr("class", "bubble");
+
+    var svg4 = d3.select("#Maker2")
+        .append("svg")
+        .attr("width", diameter)
+        .attr("height", diameter)
+        .attr("class", "bubble");
+
+
+
     //D3 has some internal functionality that can turn GeoJSON data into screen coordinates based on the projection you set. This is not unlike other libraries such as Leaflet, but the result is much more open-ended, not constrained to shapes on a tiled Mercator map.1 So, yes, D3 supports projections.
     var projection = d3.geo.equirectangular()
     // Create GeoPath function that uses built-in D3 functionality to turn
@@ -93,13 +115,28 @@ $(document).ready(function() {
         d3.csv('aircraft_incidents.csv', function(error, data) {
             if (error) throw error;
             var map1 = {};
+            var map3 = {};
+            var map5 = {};
             data.forEach(function(d) {
                 if (map1[d.Country] != null) {
                     map1[d.Country] = map1[d.Country] + 1;
                 } else {
                     map1[d.Country] = 1;
                 }
+
+                if (map3[d.Make] != null) {
+                    map3[d.Make] = map3[d.Make] + 1;
+                } else {
+                    map3[d.Make] = 1;
+                }
+
+                if (map5[d.Make] != null) {
+                    map5[d.Make] = +map5[d.Make] + Number(d.Total_Fatal_Injuries);
+                } else {
+                    map5[d.Make] = +d.Total_Fatal_Injuries;
+                }
             });
+            //by country array
             var map2 = [];
             var aaa = 0;
             for (var key in map1) {
@@ -108,7 +145,85 @@ $(document).ready(function() {
                 aaa++;
             }
             map2.sort((a,b) => (a.Count > b.Count) ? -1 : ((b.Count > a.Count) ? 1 : 0));
-            console.log(map2);
+
+
+            // number of incidents by make array
+            var map4 = [];
+            aaa = 0;
+            for (var key in map3) {
+                var c = map3[key];
+                map4[aaa] = {Make: key, Count: +c};
+                aaa++;
+            }
+            map4 = map4.map(function(d, i){ d.value = +d.Count; return d; });
+            var nodes1 = bubble.nodes({children:map4}).filter(function(d) { return !d.children; });
+
+            //setup the chart
+            var bubbles = svg3.append("g")
+                .attr("transform", "translate(0,0)")
+                .selectAll(".bubble")
+                .data(nodes1)
+                .enter();
+
+            //create the bubbles
+            bubbles.append("circle")
+                .attr("r", function(d){ return d.r; })
+                .attr("cx", function(d){ return d.x; })
+                .attr("cy", function(d){ return d.y; })
+                .style("fill", function(d) { return color(d.value); });
+
+            //format the text for each bubble
+            bubbles.append("text")
+                .attr("x", function(d){ return d.x; })
+                .attr("y", function(d){ return d.y + 5; })
+                .attr("text-anchor", "middle")
+                .text(function(d, i){ return d.Make; })
+                .style({
+                    "fill":"white",
+                    "font-family":"Helvetica Neue, Helvetica, Arial, san-serif",
+                    "font-size": "14px"
+                });
+
+
+            // number fo fatal injuries by make array
+            var map6 = [];
+            aaa = 0;
+            for (var key in map5) {
+                var c = map5[key];
+                map6[aaa] = {Make: key, Injury: +c};
+                aaa++;
+            }
+            map6 = map6.map(function(d, i){ d.value = +d.Injury; return d; });
+            var nodes2 = bubble.nodes({children:map6}).filter(function(d) { return !d.children; });
+
+            //setup the chart
+            var bubbles2 = svg4.append("g")
+                .attr("transform", "translate(0,0)")
+                .selectAll(".bubble")
+                .data(nodes2)
+                .enter();
+
+            //create the bubbles
+            bubbles2.append("circle")
+                .attr("r", function(d){ return d.r; })
+                .attr("cx", function(d){ return d.x; })
+                .attr("cy", function(d){ return d.y; })
+                .style("fill", function(d) { return color(d.value); });
+
+            //format the text for each bubble
+            bubbles2.append("text")
+                .attr("x", function(d){ return d.x; })
+                .attr("y", function(d){ return d.y + 5; })
+                .attr("text-anchor", "middle")
+                .text(function(d, i){ return d.Make; })
+                .style({
+                    "fill":"white",
+                    "font-family":"Helvetica Neue, Helvetica, Arial, san-serif",
+                    "font-size": "13px"
+                });
+
+
+
 
             var max = d3.max(map2, function(d, i) { return d.Count; });
 
@@ -173,6 +288,9 @@ $(document).ready(function() {
                 .attr("y", function(d,i) { return y(d.Count) - 8; })
                 .attr("dy", ".75em")
                 .text(function(d) { return d.Count; });
+
+
+
 
 
 
