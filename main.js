@@ -14,6 +14,20 @@ $(document).ready(function() {
     // Width and Height of the whole visualization
     var w = 1000;
     var h = 480;
+
+    var margin = { top: 50, right: 0, bottom: 200, left: 40 };
+
+    var width = 1900 - margin.left - margin.right;
+    var height = 700 - margin.top - margin.bottom;
+
+    var svg2 = d3.select("#CountryGraph")
+        .attr("width", 1900)
+        .attr("height", 700)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+
     //D3 has some internal functionality that can turn GeoJSON data into screen coordinates based on the projection you set. This is not unlike other libraries such as Leaflet, but the result is much more open-ended, not constrained to shapes on a tiled Mercator map.1 So, yes, D3 supports projections.
     var projection = d3.geo.equirectangular()
     // Create GeoPath function that uses built-in D3 functionality to turn
@@ -21,7 +35,7 @@ $(document).ready(function() {
     var path = d3.geo.path()
         .projection(projection);
     //add the following to create our SVG canvas.
-    var svg = d3.select('body')
+    var svg = d3.select("#map")
         .append('svg')
         .attr('width', w)
         .attr('height', h)
@@ -36,16 +50,16 @@ $(document).ready(function() {
     //add a call to d3.json to load the TopoJSON file
     //so it loads into our visualization
     d3.json('https://d3js.org/world-50m.v1.json', function(error, data) {
-        if (error) console.error(error);
+        //if (error) console.error(error);
 
         var countries = topojson.feature(data, data.objects.countries).features;
-
 
         g.selectAll(".country")
             .data(countries)
             .enter().append("path")
             .attr("class", "country")
             .attr("d", path)
+            .attr("name", function(d) {return d.properties.name;})
             .on('click', function(d) {
                 d3.select(this).classed("selected", true)
             })
@@ -78,6 +92,94 @@ $(document).ready(function() {
         // Load the data from the json file
         d3.csv('aircraft_incidents.csv', function(error, data) {
             if (error) throw error;
+            var map1 = {};
+            data.forEach(function(d) {
+                if (map1[d.Country] != null) {
+                    map1[d.Country] = map1[d.Country] + 1;
+                } else {
+                    map1[d.Country] = 1;
+                }
+            });
+            var map2 = [];
+            var aaa = 0;
+            for (var key in map1) {
+                var c = map1[key];
+                map2[aaa] = {Country: key, Count: +c};
+                aaa++;
+            }
+            map2.sort((a,b) => (a.Count > b.Count) ? -1 : ((b.Count > a.Count) ? 1 : 0));
+            console.log(map2);
+
+            var max = d3.max(map2, function(d, i) { return d.Count; });
+
+            var y = d3.scale.linear().domain([0,max]).range([height, 0]);
+
+            var x = d3.scale.ordinal()
+                .domain(map2.map(function(d, i) { return d.Country; }))
+                .rangeRoundBands([0, width], 0.1);
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
+
+            svg2.append("g")
+                .attr("class", "xaxis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .selectAll("text")
+                .style("font-size", "12px")
+                .style("text-anchor", "end")
+                .attr("dx", "-.9em")
+                .attr("dy", "-.5em")
+                .attr("transform", function(d) {
+                    return "rotate(-80)"
+                });
+
+            svg2.append("g")
+                .attr("class", "yaxis")
+                .style("font-size", "12px")
+                .call(yAxis);
+
+            // Title
+            svg2.append("text")
+                .text('Aircraft Incidents by Country')
+                .style("font-size", "20px")
+                .attr("text-anchor", "middle")
+                .attr("class", "graph-title")
+                .attr("y", -10)
+                .attr("x", width / 2.0);
+
+            // Bars
+            var bar = svg2.selectAll(".bar")
+                .data(map2)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function(d, i) { return x(d.Country); })
+                .attr("width", x.rangeBand())
+                .attr("y", function(d, i) { return y(d.Count); })
+                .attr("height", function(d, i) { return height - y(d.Count); });
+
+            svg2.selectAll(".text")
+                .data(map2)
+                .enter()
+                .append("text")
+                .style("font-size", "9px")
+                .attr("class","label")
+                .attr("x", (function(d,i) { return x(d.Country); }  ))
+                .attr("y", function(d,i) { return y(d.Count) - 8; })
+                .attr("dy", ".75em")
+                .text(function(d) { return d.Count; });
+
+
+
+
+
+
+
             dataset=data.map(function(d) { return [+d.Longitude,+d.Latitude];});
             //var locations = [data.Latitude, data.Longitude];
             //var hue = 0; //create the circles
@@ -100,11 +202,11 @@ $(document).ready(function() {
                 .attr("r", 2)
                 .style('fill', "black")
 
-            //Next, we need to write two pieces of code, one that listens for when the value of the tooltip changes, and one that updates the SVG elements.
-            //We are going to use some D3 code to listen for an input change on the tooltip elements
+                //Next, we need to write two pieces of code, one that listens for when the value of the tooltip changes, and one that updates the SVG elements.
+                //We are going to use some D3 code to listen for an input change on the tooltip elements
 
-             //Add Event Listeners | mouseover
-             .on('mouseover', function(d) {
+                //Add Event Listeners | mouseover
+                .on('mouseover', function(d) {
                     d3.select(this).style('fill', 'black');
                     d3.select('#number').text(d.Accident_Number);
                     d3.select('#date').text(d.Event_Date);
@@ -121,12 +223,15 @@ $(document).ready(function() {
                         .style('display', 'block')
                         .style('opacity', 0.8)
                 })
-             //Add Event Listeners | mouseout
-             //.on('mouseout', function(d) {
-             //       d3.select(this).style('fill', d.color);
-             //       d3.select('#tip')
-             //           .style('display', 'none');
-             //   });
+            //Add Event Listeners | mouseout
+            //.on('mouseout', function(d) {
+            //       d3.select(this).style('fill', d.color);
+            //       d3.select('#tip')
+            //           .style('display', 'none');
+            //   });
+
+
+
 
         });
     });

@@ -14,11 +14,15 @@ h1 {
 }
 
 h2 {
-  font: 30px Helvetica Neue;
+    font: 30px Helvetica Neue;
     text-align: right;
 }
+h3 {
+      font: 20px Helvetica Neue;
+      text-align: right;
+}
 
-h3, p{
+h4, p{
     font: 20px Helvetica Neue;
     color: grey;
 }
@@ -31,6 +35,40 @@ path {
   fill: none;
   fill: #4af17f;        //Countries color
 }
+
+#graphing {
+    width:100%;
+    display: flex;
+    margin:30px;
+
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+.bar {
+    fill: #767175;
+}
+
+.bar:hover {
+    fill: #e67551;
+}
+
+.counting {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+}
+
+
 
 #tooltip {
   text-align: left;
