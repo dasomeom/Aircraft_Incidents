@@ -28,7 +28,7 @@ $(document).ready(function() {
     svg.append('rect')
         .attr('width', w)
         .attr('height', h)
-        .attr('fill', 'white');
+        .attr('fill', 'lightcyan');
     // Append empty placeholder g element to the SVG
     // g will contain geometry elements
     var g = svg.append("g");
@@ -37,11 +37,32 @@ $(document).ready(function() {
     //so it loads into our visualization
     d3.json('https://d3js.org/world-50m.v1.json', function(error, data) {
         if (error) console.error(error);
+
+        var countries = topojson.feature(data, data.objects.countries).features;
+
+
+        g.selectAll(".country")
+            .data(countries)
+            .enter().append("path")
+            .attr("class", "country")
+            .attr("d", path)
+            .on('click', function(d) {
+                d3.select(this).classed("selected", true)
+            })
+            .on("mouseover", function(d) {
+                d3.select(this).classed("selected", true)
+            })
+            .on("mouseout", function(d) {
+                d3.select(this).classed("selected", false)
+            })
+
+
         g.append('path')
-            .datum(topojson.feature(data, data.objects.countries))
+            .datum(countries)
             .attr('d', path);
 
         //create the zoom effect
+
         var zoom = d3.behavior.zoom()
             .on("zoom", function() {
                 g.attr("transform", "translate(" +
@@ -51,37 +72,13 @@ $(document).ready(function() {
             });
         svg.call(zoom);
 
+
+
+
         // Load the data from the json file
         d3.csv('aircraft_incidents.csv', function(error, data) {
             if (error) throw error;
             dataset=data.map(function(d) { return [+d.Longitude,+d.Latitude];});
-            //console.log(dataset[][0]);
-            /**
-            var location =
-                data.Accident_Number = d.Accident_Number;
-                data.Event_Date = d.parseDate(d.Event_Date);
-                data.Location = d.Location;
-                data.Country = d.Country;
-                data.Latitude = +d.Latitude;
-                data.Longitude = +d.Longitude;
-                data.Airport_Code = d.Airport_Code;
-                data.Airport_Name = d.Airport_Name;
-                data.Injury_Severity = d.Injury_Severity;
-                data.Aircraft_Damage = d.Aircraft_Damage;
-                data.Registration_Number = d.Registration_Number;
-                data.Make = d.Make;
-                data.Model = d.Model;
-                data.Schedule = d.Schedule;
-                data.Air_Carrier = d.Air_Carrier;
-                data.Total_Fatal_Injuries = d.Total_Fatal_Injuries;
-                data.Total_Serious_Injuries = d.Total_Serious_Injuries;
-                data.Total_Uninjured = d.Total_Uninjured;
-                data.Weather_Condition = d.Weather_Condition;
-                data.Broad_Phase_of_Flight = d.Broad_Phase_of_Flight;
-                return data;
-            }
-**/
-        //console.log(Number(data[0].Latitude));
             //var locations = [data.Latitude, data.Longitude];
             //var hue = 0; //create the circles
             // we will pass our data (the TopoJSON) as an argument, then create SVG elements using a classic D3 append. Selecting all paths, the TopoJSON is bound in the data method. From here, we can perform work on each element.
@@ -111,6 +108,13 @@ $(document).ready(function() {
                     d3.select(this).style('fill', 'black');
                     d3.select('#number').text(d.Accident_Number);
                     d3.select('#date').text(d.Event_Date);
+                    d3.select('#location').text(d.Location);
+                    d3.select('#country').text(d.Country);
+                    d3.select('#injury').text(d.Injury_Severity);
+                    d3.select('#carrier').text(d.Air_Carrier);
+                    d3.select('#totalFatal').text(d.Total_Fatal_Injuries);
+                    d3.select('#totalSerious').text(d.Total_Serious_Injuries);
+                    d3.select('#weather').text(d.Weather_Condition);
                     d3.select('#tooltip')
                         .style('left', (d3.event.pageX + 20) + 'px')
                         .style('top', (d3.event.pageY - 80) + 'px')
@@ -118,11 +122,11 @@ $(document).ready(function() {
                         .style('opacity', 0.8)
                 })
              //Add Event Listeners | mouseout
-             .on('mouseout', function(d) {
-                    d3.select(this).style('fill', d.color);
-                    d3.select('#tip')
-                        .style('display', 'none');
-                });
+             //.on('mouseout', function(d) {
+             //       d3.select(this).style('fill', d.color);
+             //       d3.select('#tip')
+             //           .style('display', 'none');
+             //   });
 
         });
     });

@@ -9,13 +9,22 @@
     <script src="//d3js.org/topojson.v1.min.js"></script>
 </head>
 <body>
-<h1>Visualization of Aircraft incidents</h1>
-<h2>Zoom in/out | Hover over the data point for additional data</h2>
+<div id= "headers">
+<h1>Visualizing Aircraft incidents</h1>
+<h2>Dasom Eom and Fitsum Seyoum     November 25, 2018</h2>
+<h3>Hover over the data point for additional data</h3>
+</div>
 <div id="map"></div>
-
 <div id="tooltip">
-    Accident_Number: <span id="number" class="info"></span><br>
-    Event_Date: <span id="date" class="info"></span><br>
+    Accident Number: <span id="number" class="info"></span><br>
+    Date: <span id="date" class="info"></span><br>
+    Location: <span id="location" class="info"></span><br>
+    Country: <span id="country" class="info"></span><br>
+    Injury Severity: <span id="injury" class="info"></span><br>
+    Air Carrier: <span id="carrier" class="info"></span><br>
+    Total Fatal Injuries: <span id="totalFatal" class="info"></span><br>
+    Total Serious Injuries: <span id="totalSerious" class="info"></span><br>
+    Weather Condition: <span id="weather" class="info"></span><br>
 </div>
 </body>
 </html>
