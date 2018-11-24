@@ -1,14 +1,32 @@
+* {
+    font-family: "Helvetica Neue";
+}
+
+
+
 body {
-  background-color:lightgray;
-  text-align: center;
+  background-color: mintcream;
 }
-h1, h3, p{
-  text-align:center;
+h1 {
+  font: 90px Helvetica Neue;
+    text-align: center;
+
 }
+
+h2 {
+  font: 30px Helvetica Neue;
+    text-align: right;
+}
+
+h3, p{
+    font: 20px Helvetica Neue;
+    color: grey;
+}
+
 /* ------------------------------------------ */
 
 path {
-  stroke: #4af17f;          //Borders color
+  stroke: #088408;          //Borders color
   stroke-width: 0.5px;  //Borders width line
   fill: none;
   fill: #4af17f;        //Countries color
@@ -17,24 +35,25 @@ path {
 #tooltip {
   text-align: left;
   padding: 16px;
-  background-color: lightsalmon;
+  background-color: #87ebdf;
   border: 1px solid #fffafe;
   width: auto;
-  opacity: 0;
-  color: rgba(255, 174, 181, 0.6);
+  opacity: 0%;
+  color: #323232;
   position: absolute;
 }
 
+.country {
+    fill: #4af17f;
+    stroke: #333333;
+    stroke-width: 0.5;
+}
+.selected {
+    fill: yellow;
+}
 /*
  * Footer
  */
 a:link    {color:orangered;  text-decoration:none}
 a:visited {color:orangered; text-decoration:none}
-a:hover   {color:red; text-decoration:underline}
-
-.tableFooter{
-  margin-top: 15px;
-}
-.footerSvg{
-  width: 32px;
-}
+a:hover   {color:antiquewhite; text-decoration:underline}
