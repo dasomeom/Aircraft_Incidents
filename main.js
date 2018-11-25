@@ -26,7 +26,11 @@ $(document).ready(function() {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
+    var svg5 = d3.select("#byTime")
+        .attr("width", 1900)
+        .attr("height", 700)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var diameter = 500, //max size of the bubbles
         color    = d3.scale.category10(); //color category
@@ -117,6 +121,7 @@ $(document).ready(function() {
             var map1 = {};
             var map3 = {};
             var map5 = {};
+            var map7 = {};
             data.forEach(function(d) {
                 if (map1[d.Country] != null) {
                     map1[d.Country] = map1[d.Country] + 1;
@@ -135,7 +140,15 @@ $(document).ready(function() {
                 } else {
                     map5[d.Make] = +d.Total_Fatal_Injuries;
                 }
+                var date = d.Event_Date;
+                date = date.substring(date.lastIndexOf("/")+1);
+                if (map7[date] != null) {
+                    map7[date] = +map7[date] + 1;
+                } else {
+                    map7[date] = +1;
+                }
             });
+
             //by country array
             var map2 = [];
             var aaa = 0;
@@ -289,13 +302,83 @@ $(document).ready(function() {
                 .attr("dy", ".75em")
                 .text(function(d) { return d.Count; });
 
+            // number of incidents by make array
+            var map8 = [];
+            aaa = 0;
+            for (var key in map7) {
+                var c = map7[key];
+                if (+key > 90) key = Number(key) + 1900;
+                else if (+key > 80) key = Number(key) + 1800;
+                else key = Number(key) + 2000;
+                map8[aaa] = {Year: +key, Count: +c};
+                aaa++;
+            }
+            map8.sort((a,b) => (a.Year > b.Year) ? 1 : ((b.Year > a.Year) ? -1 : 0));
+            console.log(map8);
 
+            var max2 = d3.max(map8, function(d, i) { return d.Count; });
 
+            var y2 = d3.scale.linear().domain([0,max2]).range([height, 0]);
 
+            var x2 = d3.scale.ordinal()
+                .domain(map8.map(function(d, i) { return d.Year; }))
+                .rangeRoundBands([0, width], 0.1);
 
+            var xAxis2 = d3.svg.axis()
+                .scale(x2)
+                .orient("bottom");
 
+            var yAxis2 = d3.svg.axis()
+                .scale(y2)
+                .orient("left");
 
+            svg5.append("g")
+                .attr("class", "xaxis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis2)
+                .selectAll("text")
+                .style("font-size", "12px")
+                .style("text-anchor", "end")
+                .attr("dx", "-.9em")
+                .attr("dy", "-.5em")
+                .attr("transform", function(d) {
+                    return "rotate(-80)"
+                });
 
+            svg5.append("g")
+                .attr("class", "yaxis")
+                .style("font-size", "12px")
+                .call(yAxis2);
+
+            // Title
+            svg5.append("text")
+                .text('Aircraft Incidents by Year')
+                .style("font-size", "20px")
+                .attr("text-anchor", "middle")
+                .attr("class", "graph-title")
+                .attr("y", -10)
+                .attr("x", width / 2.0);
+
+            // Bars
+            var bar2 = svg5.selectAll(".bar")
+                .data(map8)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function(d, i) { return x2(d.Year); })
+                .attr("width", x2.rangeBand())
+                .attr("y", function(d, i) { return y2(d.Count); })
+                .attr("height", function(d, i) { return height - y2(d.Count); });
+
+            svg5.selectAll(".text")
+                .data(map8)
+                .enter()
+                .append("text")
+                .style("font-size", "9px")
+                .attr("class","label")
+                .attr("x", (function(d,i) { return x2(d.Year); }  ))
+                .attr("y", function(d,i) { return y2(d.Count) - 8; })
+                .attr("dy", ".75em")
+                .text(function(d) { return d.Count; });
 
 
             dataset=data.map(function(d) { return [+d.Longitude,+d.Latitude];});
