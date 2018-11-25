@@ -38,9 +38,8 @@ path {
 
 #graphing {
     width:100%;
-    display: flex;
-    margin:30px;
 
+    text-align: center;
 }
 
 .axis path,
@@ -76,10 +75,11 @@ path {
   background-color: #87ebdf;
   border: 1px solid #fffafe;
   width: auto;
-  opacity: 0%;
+  opacity: 0;
   color: #323232;
   position: absolute;
 }
+
 
 .country {
     fill: #4af17f;
