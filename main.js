@@ -93,7 +93,7 @@ $(document).ready(function() {
                 })
                 .on("mouseover", function(d) {
                     d3.select(this).classed("selected", true)
-                    console.log(cN[Number(d.id)]);
+                    //console.log(cN[Number(d.id)]);
                 })
                 .on("mouseout", function(d) {
                     d3.select(this).classed("selected", false)
@@ -318,7 +318,7 @@ $(document).ready(function() {
                 }
                 map8.sort((a,b) => (a.Year > b.Year) ? 1 : ((b.Year > a.Year) ? -1 : 0));
 
-                var max2 = d3.max(map8, function(d, i) { return d.Count; });
+                var max2 = d3.max(map8, function(d, i) { return d.Count; }) + 10;
 
                 var y2 = d3.scale.linear().domain([0,max2]).range([height, 0]);
 
@@ -375,10 +375,11 @@ $(document).ready(function() {
                     .data(map8)
                     .enter()
                     .append("text")
-                    .style("font-size", "9px")
+                    .style("font-size", "12px")
+                    .style('fill', 'white')
                     .attr("class","label")
-                    .attr("x", (function(d,i) { return x2(d.Year); }  ))
-                    .attr("y", function(d,i) { return y2(d.Count) - 8; })
+                    .attr("x", (function(d,i) { return x2(d.Year) + 29; }  ))
+                    .attr("y", function(d,i) { return y2(d.Count) + 4; })
                     .attr("dy", ".75em")
                     .text(function(d) { return d.Count; });
 
