@@ -11,6 +11,7 @@ TopoJSON is an extension of GeoJSON that encodes topology. Rather than represent
 */
 
 $(document).ready(function() {
+    var cN = {};
     // Width and Height of the whole visualization
     var w = 1000;
     var h = 480;
@@ -72,12 +73,12 @@ $(document).ready(function() {
     // g will contain geometry elements
     var g = svg.append("g");
 
+    var bar;
     //add a call to d3.json to load the TopoJSON file
     //so it loads into our visualization
     d3.json('https://d3js.org/world-110m.v1.json', function(error, data) {
         if (error) console.error(error);
         d3.tsv("world-110m-names.tsv", function(namedata) {
-            var cN = {};
             namedata.forEach(function(d) {
                 cN[+d.id] = d.name;
             })
@@ -93,12 +94,12 @@ $(document).ready(function() {
                 })
                 .on("mouseover", function(d) {
                     d3.select(this).classed("selected", true)
-                    //console.log(cN[Number(d.id)]);
+                    cN[Number(d.id)];
                 })
                 .on("mouseout", function(d) {
                     d3.select(this).classed("selected", false)
-                })
 
+                })
 
 
 
@@ -285,14 +286,24 @@ $(document).ready(function() {
                     .attr("x", width / 2.0);
 
                 // Bars
-                var bar = svg2.selectAll(".bar")
+                bar = svg2.selectAll(".bar")
                     .data(map2)
                     .enter().append("rect")
                     .attr("class", "bar")
                     .attr("x", function(d, i) { return x(d.Country); })
                     .attr("width", x.rangeBand())
                     .attr("y", function(d, i) { return y(d.Count); })
-                    .attr("height", function(d, i) { return height - y(d.Count); });
+                    .attr("height", function(d, i) { return height - y(d.Count); })
+                    .on('mouseover', function(d) {
+                        d3.select(this).classed("selected", true)
+                    })
+                    .on('mouseout', function(d) {
+                        d3.select(this).classed("selected", false)
+
+                    });
+
+
+
 
                 svg2.selectAll(".text")
                     .data(map2)
@@ -425,11 +436,13 @@ $(document).ready(function() {
                             .style('top', (d3.event.pageY - 80) + 'px')
                             .style('display', 'block')
                             .style('opacity', 0.8)
+                        d3.select(this).style('fill', 'red');
                     })
                     .on('mouseout', function(d) {
                            d3.select(this).style('fill', d.color);
                            d3.select('#tooltip')
                                .style('display', 'none');
+                        d3.select(this).style('fill', 'black');
                        });
 
 

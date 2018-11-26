@@ -29,7 +29,7 @@ h4, p{
 
 /* ------------------------------------------ */
 
-path {
+mappath {
   stroke: #088408;          //Borders color
   stroke-width: 0.5px;  //Borders width line
   fill: none;
@@ -38,25 +38,14 @@ path {
 
 #graphing {
     width:100%;
-
     text-align: center;
 }
 
-.axis path,
-.axis line {
-    fill: none;
-    stroke: grey;
-    stroke-width: 1;
-    shape-rendering: crispEdges;
-}
 
 .bar {
     fill: #767175;
 }
 
-.bar:hover {
-    fill: #e67551;
-}
 
 .counting {
     line-height: 1;
@@ -64,7 +53,7 @@ path {
     padding: 12px;
     background: rgba(0, 0, 0, 0.8);
     color: #fff;
-    border-radius: 2px;
+    border-radius: 1px;
 }
 
 
