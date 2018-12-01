@@ -18,10 +18,12 @@
 <div id= "headers">
     <h1>Visualizing Aircraft incidents</h1>
     <h2>Dasom Eom and Fitsum Seyoum</h2>
-    <h3>November 25, 2018</h3>
-    <h4>Hover over the data point for additional data</h4>
+    <h3>November 30, 2018</h3>
 </div>
 <div id = "graphing">
+    <H5>Aircraft Incidents over the World Map</H5>
+    <h4>The aircraft incidents over the last two decades were displayed on a world map. We are able to see that most of the incidents have taken place in the United States.</h4>
+    <H4>Zoom in or out and move around the map. You can get additional data by hovering over the data point</H4>
     <div id = "mapping">
         <div id="map">
         </div>
@@ -41,18 +43,30 @@
     <div id="country_info">
     </div>
 </div>
-<div id="byCountry">
-    <svg id="CountryGraph" width = "2000px" height = "700px"></svg>
+<div id="byCountry" style="text-align:center;">
+
+    <H5>The Number(Percentage) of Aircraft Incidents by Country</H5>
+    <H4>Since a lot of data did not have information of latitude and longitude, we plotted the data in a bar graph form. </H4>
+
+    <svg id="CountryGraph" width = "1300px" height = "700px" ></svg>
+    <div id="tooltip2">
+        Number of Incidents: <span id="numIn" class="info"></span><br>
+        Percentage of Incidents: <span id="perIn" class="info"></span><br>
+    </div>
 </div>
 
-<div id="byMaker">
-    <p>Number of Incidents by Aircraft Make VS Number of Fatal Injuries by Aircraft Make</p>
+<div id="byMaker" style="text-align:center;">
+    <H5>The Number of Incidents by Aircraft Make VS The Number of Fatal Injuries by Aircraft Make</H5>
+    <H4>Is there any correlation between the number of incident and Make or between fatality and Make?</H4>
+    <H4>We cannot make an assumption because we don't have data on the number of aircrafts in use in the market by company.</H4>
     <svg id="Maker" width = "600px" height = "500px"></svg>
     <svg id="Maker2" width = "600px" height = "500px"></svg>
 </div>
 
-<div id="byYear">
-    <p>The number of Incidents by year in time history </p>
+<div id="byYear" style="text-align:center;">
+    <H5>The number of Incidents by year in time history </H5>
+    <H4>Over the past two decades, flight technology has developed and the more number of people have become traveling around the world by flight.</H4>
+    <H4>The year with the most number of incidents is 2010, and then the number of incidents have decreased.</H4>
     <svg id="byTime" width = "2000px" height = "700px"></svg>
 </div>
 

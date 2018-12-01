@@ -13,7 +13,7 @@ $(document).ready(function() {
     var map7 = {};
 // Width and Height of the whole visualization
     var w = 900;
-    var h = 480;
+    var h = 600;
 
     var margin = {top: 0, right: 40, bottom: 200, left: 40};
 
@@ -64,10 +64,10 @@ $(document).ready(function() {
     var svg = d3.select("#map")
         .append('svg')
         .attr('width', w)
-        .attr('height', h)
+        .attr('height', h - 120)
     svg.append('rect')
         .attr('width', w)
-        .attr('height', h)
+        .attr('height', h - 120)
         .attr('fill', 'lightcyan');
 // Append empty placeholder g element to the SVG
 // g will contain geometry elements
@@ -89,11 +89,14 @@ $(document).ready(function() {
 
     function makeChart(error, data, namedata, aidata) {
         if (error) throw error;
+        var bcb = 0;
         aidata.forEach(function (d) {
             if (map1[d.Country] != null) {
                 map1[d.Country] = map1[d.Country] + 1;
+                bcb = bcb + 1;
             } else {
                 map1[d.Country] = 1;
+                bcb = bcb + 1;
             }
 
             if (map3[d.Make] != null) {
@@ -115,19 +118,21 @@ $(document).ready(function() {
                 map7[date] = +1;
             }
         });
-
         //by country array
         var map2 = [];
         aaa = 0;
+
         for (var key in map1) {
             var c = map1[key];
             namedata.forEach(function (d) {
                 if (d.name == key) {
                     map2[aaa] = {Country: key, Count: +c, ID: d.id};
+
                     aaa++;
                 }
             })
         }
+
 
         var countries = topojson.feature(data, data.objects.countries).features;
 
@@ -164,7 +169,6 @@ $(document).ready(function() {
                     .attr("d", path.projection(projection));
             });
         svg.call(zoom);
-
 
 
         // number of incidents by make array
@@ -243,9 +247,12 @@ $(document).ready(function() {
                 "font-size": "13px"
             });
 
-        var max = d3.max(map2, function(d, i) { return d.Count; }) + 30;
+        var max = d3.max(map2, function(d, i) { return d.Count; });
+        var maxmax = 1;
 
-        var y = d3.scale.linear().domain([0,max]).range([height, 0]);
+        var y = d3.scale.linear().domain([0,max]).range([height, 10]);
+
+        var yy = d3.scale.linear().domain([0,maxmax]).range([height, 10]);
 
         var x = d3.scale.ordinal()
             .domain(map2.map(function(d, i) { return d.Country; }))
@@ -258,6 +265,12 @@ $(document).ready(function() {
         var yAxis = d3.svg.axis()
             .scale(y)
             .orient("left");
+
+        var formatPercent = d3.format(".0%");
+        var yyAxis = d3.svg.axis()
+            .scale(yy)
+            .orient("right")
+            .tickFormat(formatPercent);
 
         svg2.append("g")
             .attr("class", "xaxis")
@@ -277,14 +290,11 @@ $(document).ready(function() {
             .style("font-size", "12px")
             .call(yAxis);
 
-        // Title
-        svg2.append("text")
-            .text('Aircraft Incidents by Country')
-            .style("font-size", "20px")
-            .attr("text-anchor", "middle")
-            .attr("class", "graph-title")
-            .attr("y", 40)
-            .attr("x", width / 2.0);
+        svg2.append("g")
+            .attr("class", "yyaxis")
+            .attr("transform", "translate(" + width + " ,0)")
+            .style("font-size", "12px")
+            .call(yyAxis);
 
         // Bars
         bar = svg2.selectAll(".bar")
@@ -297,22 +307,21 @@ $(document).ready(function() {
             .attr("height", function(d, i) { return height - y(d.Count); })
             .on('mouseover', function(d) {
                 d3.select(this).classed("selected", true)
+                d3.select('#numIn').text(d.Count);
+                d3.select('#perIn').text(Number(+d.Count/bcb * 100).toFixed(2) + "%");
+                d3.select('#tooltip2')
+                    .style('left', (d3.event.pageX + 20) + 'px')
+                    .style('top', (d3.event.pageY - 80) + 'px')
+                    .style('display', 'block')
+                    .style('opacity', 0.8)
             })
             .on('mouseout', function(d) {
                 d3.select(this).classed("selected", false)
+                d3.select('#tooltip2')
+                    .style('display', 'none');
             });
 
 
-        svg2.selectAll(".text")
-            .data(map2)
-            .enter()
-            .append("text")
-            .style("font-size", "9px")
-            .attr("class","label")
-            .attr("x", (function(d,i) { return x(d.Country); }  ))
-            .attr("y", function(d,i) { return y(d.Count) - 8; })
-            .attr("dy", ".75em")
-            .text(function(d) { return d.Count; });
 
         // number of incidents by make array
         var map8 = [];
@@ -361,14 +370,6 @@ $(document).ready(function() {
             .style("font-size", "12px")
             .call(yAxis2);
 
-        // Title
-        svg5.append("text")
-            .text('Number of Aircraft Incidents by Year')
-            .style("font-size", "20px")
-            .attr("text-anchor", "middle")
-            .attr("class", "graph-title")
-            .attr("y", -10)
-            .attr("x", width / 2.0);
 
         // Bars
         var bar2 = svg5.selectAll(".bar")
