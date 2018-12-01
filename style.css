@@ -22,9 +22,21 @@ h3 {
     text-align: right;
 }
 
-h4, p{
+h4 {
     font: 20px Helvetica Neue;
+    color: black;
+    text-align: center;
+}
+
+h5 {
+    font: 30px Helvetica Neue;
+    color: black;
+    text-align: center;
+}
+p{
+    font: 16px Helvetica Neue;
     color: grey;
+    text-align: center;
 }
 
 /* ------------------------------------------ */
@@ -69,6 +81,15 @@ fill: none;
     position: absolute;
 }
 
+#tooltip2 {
+    text-align: left;
+    background-color: cadetblue;
+    border: 1px solid #767175;
+    width: auto;
+    opacity: 0;
+    color: #323232;
+    position: absolute;
+}
 
 .country {
     fill: #4af17f;
