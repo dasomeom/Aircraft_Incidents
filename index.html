@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Aircraft incidents</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="style.css" />
-    <script src="main.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="http://d3js.org/topojson.v1.min.js"></script>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="https://unpkg.com/default-passive-events"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="https://d3js.org/d3-scale.v2.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="main.js"></script>
+    <link type="text/css" rel="stylesheet" href="style.css" />
+
+
 </head>
 <body>
 <div id= "headers">
-<h1>Visualizing Aircraft incidents</h1>
-<h2>Dasom Eom and Fitsum Seyoum</h2>
-<h3>November 25, 2018</h3>
-<h4>Hover over the data point for additional data</h4>
+    <h1>Visualizing Aircraft incidents</h1>
+    <h2>Dasom Eom and Fitsum Seyoum</h2>
+    <h3>November 25, 2018</h3>
+    <h4>Hover over the data point for additional data</h4>
 </div>
 <div id = "graphing">
     <div id = "mapping">
